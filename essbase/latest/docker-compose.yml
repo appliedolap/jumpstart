@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    image: "microsoft/mssql-server-linux:2017-latest"
+    expose:
+      - "1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: ${SQL_PW}
+      MSSQL_PID: Express
+  essbase:
+    depends_on:
+      - db
+    image: ${REGISTRY}/essbase:latest
+    container_name: essbase
+    ports:
+      - "9000:9000"
+      - "1423:1423"
+      - "32768-32778:32768-32778"
+    ulimits:
+      nofile:
+        hard: 32000
+        soft: 10000
+    environment:
+      # There are some password requirements for various components; don't attempt to just set "password" here -- 
+      # it'll cause configuration to fail
+      # EPM_ADMIN: admin
+      EPM_PASSWORD: ${EPM_PW}
+      SQL_HOST: db
+      SQL_USER: sa
+      SQL_PASSWORD: ${SQL_PW}
+      RESTART_EPM_AFTER_LCM_IMPORT: "false"
+      AUTO_START_ADMIN_CONSOLE: "false"
