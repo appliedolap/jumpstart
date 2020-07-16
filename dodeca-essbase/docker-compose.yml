@@ -1,0 +1,16 @@
+version: '3'
+services:
+  dodeca:
+    image: "appliedolap/dodeca:standalone-latest"
+    ports:
+      - "8000:8000"
+    environment:
+      DEPLOYMENT_URL: "http://localhost:8000/dodeca"
+      DODECA_LOAD_STARTER_KIT_ON_STARTUP: "true"
+      #HIBERNATE_CONNECTION_URL: "jdbc:h2:./db/dodeca;MV_STORE=FALSE;AUTO_SERVER=TRUE"
+    volumes: 
+      - ./db:/opt/dodeca/db
+  dodeca-essbase:
+    image: "appliedolap/dodeca:dodeca-essbase-8.0.0-for-11.1.2.4.035"
+    ports:
+      - "8080:8080"
